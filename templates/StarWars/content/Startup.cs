@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StarWars.Characters;
@@ -64,6 +65,12 @@ namespace StarWars
                     // Last we will add apollo tracing to our server which by default is 
                     // only activated through the X-APOLLO-TRACING:1 header.
                     .AddApolloTracing();
+
+            services.AddCors();
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -73,12 +80,29 @@ namespace StarWars
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(o => o.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            //app.UseGraphQL<ISchema>();
+            //app.UseGraphQLPlayground(new GraphQLPlaygroundOptions());
+
             // in order to expose our GraphQL schema we need to map the GraphQL server 
             // to a specific route. By default it is mapped onto /graphql.
             app
                 .UseWebSockets()
                 .UseRouting()
-                .UseEndpoints(endpoint => endpoint.MapGraphQL());
+
+                 //.UseEndpoints(endpoint => endpoint.MapGraphQL());
+
+                 .UseEndpoints(endpoints =>
+                 {
+                     endpoints.MapGraphQL();
+                     endpoints.MapGraphQLPlayground();
+                 }
+                );
+
+            // use GraphQL Playground middleware at default path /ui/playground with default options
+            //app.UseGraphQLPlayground();
+
+
         }
     }
 }

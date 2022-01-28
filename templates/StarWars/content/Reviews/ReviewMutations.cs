@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using HotChocolate;
 using HotChocolate.Subscriptions;
@@ -20,6 +21,8 @@ namespace StarWars.Reviews
             [Service]IReviewRepository repository,
             [Service]ITopicEventSender eventSender)
         {
+            //throw new NotImplementedException("errors");
+
             var review = new Review(input.Stars, input.Commentary);
             repository.AddReview(input.Episode, review);
             await eventSender

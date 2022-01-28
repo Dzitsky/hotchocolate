@@ -10,11 +10,11 @@ namespace StarWars.Characters
     public class Human : ICharacter
     {
         public Human(
-            int id, 
-            string name, 
-            IReadOnlyList<int> friends, 
-            IReadOnlyList<Episode> appearsIn, 
-            string? homePlanet = null, 
+            int id,
+            string name,
+            IReadOnlyList<int> friends,
+            IReadOnlyList<Episode> appearsIn,
+            string? homePlanet = null,
             double height = 1.72d)
         {
             Id = id;
@@ -45,5 +45,18 @@ namespace StarWars.Characters
         /// <inheritdoc />
         [UseConvertUnit]
         public double Height { get; }
+
+        public string HelloWorld(string name)
+        {
+            return $"Hello, {name}";
+        }
     }
+
+    //[ExtendObjectType("Human")]
+    //public class HumanExtensions{
+    //    public string HelloWorld(string name)
+    //    {
+    //        return $"Hello, {name}";
+    //    }
+    //}
 }
